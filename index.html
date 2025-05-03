@@ -1,0 +1,323 @@
+<!-- Name: Steve Sequeira-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Load CryptoJS library from CDN for encryption/decryption -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <script>
+      // Function to encrypt a message using AES encryption
+      function encryptMessage() {
+        // Get message and key from input fields
+        const message = document.getElementById('encrypt-text').value;
+        const key = document.getElementById('encrypt-key').value;
+        
+        // Encrypt the message using AES with the provided key
+        const encrypted = CryptoJS.AES.encrypt(message, key).toString();
+        
+        // Display the encrypted result with a lock emoji
+        document.getElementById('encrypt-result').innerHTML = `<p>🔒 ${encrypted}</p>`;
+      }
+
+      // Function to decrypt an encrypted message
+      function decryptMessage() {
+        // Get encrypted message and key from input fields
+        const encrypted = document.getElementById('decrypt-text').value;
+        const key = document.getElementById('decrypt-key').value;
+        
+        try {
+          // Decrypt the message using AES with the provided key
+          const decrypted = CryptoJS.AES.decrypt(encrypted, key).toString(CryptoJS.enc.Utf8);
+          
+          // Display decrypted result or error if key is invalid
+          document.getElementById('decrypt-result').innerHTML = `<p>📩 ${decrypted || "Invalid key!"}</p>`;
+        } catch (e) {
+          // Show error alert if decryption fails
+          alert("Decryption failed! Check your key/message.");
+        }
+      }
+    </script>
+    
+    <!-- Standard HTML meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CipherChat</title>
+    
+    <!-- CSS styles for the application -->
+    <style>
+        /* CSS variables for consistent theming */
+        :root {
+            --primary-color: #25D366;  /* WhatsApp green */
+            --secondary-color: #128C7E; /* Darker green */
+            --light-color: #DCF8C6;    /* Light green background */
+            --dark-color: #075E54;      /* Dark green */
+            --text-color: #333;         /* Main text color */
+            --light-text: #fff;         /* Light text color */
+        }
+        
+        /* Basic body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: var(--text-color);
+        }
+        
+        /* Container for the main content */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header styling */
+        header {
+            background-color: var(--secondary-color);
+            color: var(--light-text);
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* Main application container */
+        .app-container {
+            background-color: white;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Tab navigation styling */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        /* Individual tab styling */
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        
+        /* Active tab styling */
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Tab content containers (hidden by default) */
+        .tab-content {
+            display: none;
+        }
+        
+        /* Active tab content */
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Textarea styling for message input */
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        /* Key input field styling */
+        .key-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        /* Button styling */
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        /* Button hover effect */
+        .btn:hover {
+            background-color: var(--dark-color);
+        }
+        
+        /* Result display area */
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: var(--light-color);
+            min-height: 50px;
+        }
+        
+        /* Copy button specific styling */
+        .copy-btn {
+            background-color: var(--secondary-color);
+            margin-left: 10px;
+        }
+        
+        /* Container for action buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        /* Instructions section styling */
+        .instructions {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        /* Footer styling */
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        /* Responsive design for mobile devices */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .copy-btn {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main page structure -->
+    <div class="container">
+        <!-- Header section with title -->
+        <header>
+            <h1><span class="logo">🔒</span> WhatsApp Message Encryptor/Decryptor</h1>
+        </header>
+        
+        <!-- Main application container -->
+        <div class="app-container">
+            <!-- Tab navigation -->
+            <div class="tabs">
+                <button class="tab active" onclick="openTab('encrypt')">Encrypt</button>
+                <button class="tab" onclick="openTab('decrypt')">Decrypt</button>
+            </div>
+            
+            <!-- Encryption tab content -->
+            <div id="encrypt" class="tab-content active">
+                <h2>Encrypt Your WhatsApp Message</h2>
+                <textarea id="encrypt-text" placeholder="Type your WhatsApp message here..."></textarea>
+                <input type="password" class="key-input" id="encrypt-key" placeholder="Enter encryption key (keep this secret)">
+                <div class="action-buttons">
+                    <button class="btn" onclick="encryptMessage()">Encrypt Message</button>
+                </div>
+                <div class="result-container" id="encrypt-result">
+                    <p>Your encrypted message will appear here...</p>
+                </div>
+                <button class="btn copy-btn" onclick="copyResult('encrypt-result')">Copy Encrypted Message</button>
+            </div>
+            
+            <!-- Decryption tab content -->
+            <div id="decrypt" class="tab-content">
+                <h2>Decrypt Your WhatsApp Message</h2>
+                <textarea id="decrypt-text" placeholder="Paste your encrypted message here..."></textarea>
+                <input type="password" class="key-input" id="decrypt-key" placeholder="Enter decryption key">
+                <div class="action-buttons">
+                    <button class="btn" onclick="decryptMessage()">Decrypt Message</button>
+                </div>
+                <div class="result-container" id="decrypt-result">
+                    <p>Your decrypted message will appear here...</p>
+                </div>
+                <button class="btn copy-btn" onclick="copyResult('decrypt-result')">Copy Decrypted Message</button>
+            </div>
+            
+            <!-- Instructions section -->
+            <div class="instructions">
+                <h3>How to Use This Tool</h3>
+                <p><strong>To Encrypt:</strong> Type your message, enter a secret key, and click "Encrypt Message". Share the encrypted message and the key with your recipient separately.</p>
+                <p><strong>To Decrypt:</strong> Paste the encrypted message, enter the same key used for encryption, and click "Decrypt Message".</p>
+                <p><strong>Security Note:</strong> Never share your encryption key through the same channel as the encrypted message. For maximum security, share the key in person or through a different communication method.</p>
+            </div>
+        </div>
+        
+        <!-- Footer with security information -->
+        <footer>
+            <p>This tool uses AES-256 encryption for secure message transmission. Messages are processed in your browser and never stored on our servers.</p>
+        </footer>
+    </div>
+    
+    <!-- JavaScript for application functionality -->
+    <script>
+        // Function to switch between tabs
+        function openTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Remove active class from all tabs
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Show the selected tab content and mark tab as active
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Function to copy result to clipboard
+        function copyResult(elementId) {
+            // Select the result element
+            const resultElement = document.getElementById(elementId);
+            const range = document.createRange();
+            range.selectNode(resultElement);
+            
+            // Copy the selected text
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            
+            // Notify user
+            alert('Copied to clipboard!');
+        }
+    </script>
+</body>
+</html>
